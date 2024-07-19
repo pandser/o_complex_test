@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Прогноз погоды</title>
+</head>
+<body>
+    <h1>Прогноз погоды</h1>
+    <form method="get">
+        <label for="city">Поиск по городу</label><br>
+        <input type="text" id="city" name="city" required><br><br>
+        <button type="submit">
+            поиск
+        </button>
+    </form>
+    <br>
+    {% if results %}
+    {% for res in results %}
+    <a href="{% url 'app:weather' %}?latitude={{ res.latitude }}&longitude={{ res.longitude }}&name={{ res.name }}">
+        <ui>
+            <li>
+                Город: {{ res.name }}
+            </li>
+            <li>
+                Страна: {{ res.country }} {{ res.admin1}}
+            </li>
+            <li>
+                Координаты: {{ res.latitude }} {{ res.longitude }}
+            </li>
+            <br>
+        </ui>
+    </a>
+    {% endfor %}
+    {% endif %}
+    {% if request.session.last_city %}
+        <p>
+            В предыдущий раз Вы смотрели город
+        </p>
+        <a href="{% url 'app:weather' %}?latitude={{ request.session.last_city.latitude }}&longitude={{ request.session.last_city.longitude }}&name={{ request.session.last_city.name }}">
+             {{ request.session.last_city.name }}
+        </a>
+    {% endif %}
+</body>
+</html>
+
