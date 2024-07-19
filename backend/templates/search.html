@@ -16,6 +16,13 @@
         </button>
     </form>
     <br>
+    {% if error %}
+        <div>
+            <font color='red'>
+            {{ error }}
+            </font>
+        </div>
+    {% endif %}
     {% if results %}
     {% for res in results %}
     <a href="{% url 'app:weather' %}?latitude={{ res.latitude }}&longitude={{ res.longitude }}&name={{ res.name }}">

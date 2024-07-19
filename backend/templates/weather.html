@@ -8,6 +8,13 @@
 </head>
 <body>
     <h1>Прогноз погоды</h1>
+    {% if error %}
+        <div>
+            <font color='red'>
+            {{ error }}
+            </font>
+        </div>
+    {% endif %}
     <table>
         <tr>
             <th align="center">
