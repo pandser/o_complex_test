@@ -6,6 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Прогноз погоды</title>
 </head>
+<header>
+    <a href="{% url 'app:search' %}">
+        Вернуться к поиску города
+    </a>
+</header>
 <body>
     <h1>Прогноз погоды</h1>
     {% if error %}
