@@ -1,4 +1,4 @@
-from django.urls import include, path
+from django.urls import path
 
 from app import views
 
@@ -6,6 +6,6 @@ from app import views
 app_name = 'app'
 
 urlpatterns = [
-    path('search/', views.city, name='search'),
+    path('search/', views.search, name='search'),
     path('weather/', views.weather, name='weather'),
 ]

@@ -1,6 +1,6 @@
 import requests
+from django.conf import settings
 from django.contrib.sessions.models import Session
-from django.db.models import Sum, Count
 from django.shortcuts import render
 
 from app.utils import shake
@@ -14,7 +14,9 @@ def weather(request):
         'longitude': request.GET.get('longitude'),
     }
     request.session.save()
-    session_obj = Session.objects.get(session_key=request.session.session_key)
+    session_obj = Session.objects.get(
+        session_key=request.session.session_key,
+    )
     city_obj = City.objects.get_or_create(
         name=request.GET.get('name'),
         latitude=request.GET.get('latitude'),
@@ -24,9 +26,6 @@ def weather(request):
         session_id=session_obj,
         city=city_obj[0],
     )
-    print(CityInSession.objects.values('city__name').annotate(
-        count=Count('city__name')
-    ))
     params = {
         'latitude': request.GET.get('latitude'),
         'longitude': request.GET.get('longitude'),
@@ -41,7 +40,7 @@ def weather(request):
     }
     try:
         response = requests.get(
-            url='https://api.open-meteo.com/v1/forecast',
+            url=settings.URL_WEATHER_API,
             params=params
             )
     except requests.exceptions.ConnectionError as error:
@@ -53,18 +52,16 @@ def weather(request):
             },
         )
     data = shake(response.json()['hourly'])
-    context = {
-        'data': data,
-    }
     return render(
-        request,
-        'weather.html',
-        context,
+        request=request,
+        template_name='weather.html',
+        context={
+        'data': data,
+        },
         )
 
 
-def city(request):
-    # Session()
+def search(request):
     if not request.GET.get('city'):
         return render(
         request=request,
@@ -78,7 +75,7 @@ def city(request):
     }
     try:
         response = requests.get(
-            url='https://geocoding-api.open-meteo.com/v1/search',
+            url=settings.URL_GEOCODING_API,
             params=params,
         )
     except requests.exceptions.ConnectionError as error:
